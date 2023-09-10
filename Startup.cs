@@ -32,16 +32,30 @@ namespace MyCompany_2
             services.AddTransient<IServiceItemsRepository, EFServiceItemsRepository>();
             services.AddTransient<DataManager>();
 
-            // Подлкючаем контекст БД
+            // Подлкючаем контекст БД. Строка подключения к БД лежит в конфиге.
+            services.AddDbContext<AppDBContext>(el => el.UseSqlServer(Config.ConnectionString));
 
             // Настраиваем identity систему
+            services.AddIdentity<IdentityUser, IdentityRole>(opts =>
+            {
+                opts.User.RequireUniqueEmail = true;
+                opts.Password.RequiredLength = 6;
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequireLowercase = false;
+                opts.Password.RequireUppercase = false;
+                opts.Password.RequireDigit = false;
+
+            }).AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders();
 
             // Настраиваем authentication cookie
-
-            // 
-
-            // 
-
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = "myCompanyAuth";
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = "/account/login";
+                options.AccessDeniedPath = "/account/accessdenied";
+                options.SlidingExpiration = true;
+            });
 
             // Добавляем поддержку контроллеров и представлений (MVC)
             services.AddControllersWithViews()
@@ -51,15 +65,24 @@ namespace MyCompany_2
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // !!! порядок регистрации middleware очень важен
+
+            // Вывод ошибок во время разработки
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             
+            // 1. Подлкючение системы маршрутизации
             app.UseRouting();
 
-            // Подключаем поддержку статичных файлов в приложении (css, js и т.д.)
+            // 2. подключаем аутентификацию и авторизацию
+            app.UseCookiePolicy();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            // 3. Подключаем поддержку статичных файлов в приложении (css, js и т.д.)
             app.UseStaticFiles();
 
             // Маршрутизация
-            // Регистрируем нужные нам маршруты (ендпоинты)
+            // 4. Регистрируем нужные нам маршруты (ендпоинты)
             app.UseEndpoints(endpoints =>
             {
                 // загрузка главной страницы, если не заданно другое
