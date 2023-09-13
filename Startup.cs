@@ -57,8 +57,20 @@ namespace MyCompany_2
                 options.SlidingExpiration = true;
             });
 
-            // Добавляем поддержку контроллеров и представлений (MVC)
-            services.AddControllersWithViews()
+            // Настраиваем политику авторизации для Admin Area
+            services.AddAuthorization(x => {
+
+                x.AddPolicy("AdminArea", policy => { 
+                    policy.RequireRole("admin"); 
+                });
+
+            });
+
+            // Добавляем сервисы для контроллеров и представлений (MVC).
+            services.AddControllersWithViews(x => {
+
+                x.Conventions.Add(new AdminAreaAuthorization("Admin", "AdminArea"));
+            })
                 // выставляем совместимость с asp.net core 3.0
                 .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0).AddSessionStateTempDataProvider();
         }
@@ -69,7 +81,7 @@ namespace MyCompany_2
 
             // Вывод ошибок во время разработки
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
-            
+
             // 1. Подлкючение системы маршрутизации
             app.UseRouting();
 
@@ -85,6 +97,9 @@ namespace MyCompany_2
             // 4. Регистрируем нужные нам маршруты (ендпоинты)
             app.UseEndpoints(endpoints =>
             {
+                // Маршрут для панели админа
+                endpoints.MapControllerRoute("admin", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 // загрузка главной страницы, если не заданно другое
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
