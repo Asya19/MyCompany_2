@@ -44,7 +44,7 @@ namespace MyCompany_2.Domain
                 NormalizedName = "ТЕХНОЛОГ"
             });
 
-            // Создаем пользователя
+            // Создаем пользователя Admin
             modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
             {
                 Id = "91802ea1-5e98-42d1-9763-7e40452a3f7d",

@@ -21,7 +21,7 @@
                     <div class="col-4 col-12-medium">
                         @RenderBody()
 
-                        <section>
+                        @*<section>
                             <h2>Who are you guys?</h2>
                             <ul class="small-image-list">
                                 <li>
@@ -35,9 +35,9 @@
                                     <p>Vitae magna eget odio amet mollis justo facilisis amet quis. Sed sagittis consequat.</p>
                                 </li>
                             </ul>
-                        </section>
+                        </section>*@
 
-                        <section>
+                        @*<section>
                             <h2>How about some links?</h2>
                             <div>
                                 <div class="row">
@@ -61,10 +61,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </section>
+                        </section>*@
 
                     </div>
-                    <div class="col-8 col-12-medium imp-medium">
+                    @*<div class="col-8 col-12-medium imp-medium">
 
                         <section>
                             <h2>Two Column #2 (left-hand sidebar)</h2>
@@ -73,16 +73,12 @@
                             <p>Nulla ut tortor quam, a luctus nunc. Nulla condimentum diam porttitor arcu placerat tincidunt. Nunc non augue ipsum. Nulla facilisi. Phasellus feugiat augue in ipsum egestas semper. Suspendisse blandit, nisl ullamcorper blandit sollicitudin, sem leo auctor lectus, et volutpat mauris elit et odio. Ut elementum risus in metus mollis tristique vulputate nulla interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vitae orci dui, ut facilisis dui.</p>
                         </section>
 
-                    </div>
+                    </div>*@
                 </div>
-                @await Html.PartialAsync("_SidebarPartial")
-
+                    @await Html.PartialAsync("_SidebarPartial")
             </div>
         </div>
-
         @await Html.PartialAsync("_FooterPartial")
-
-
     </div>
     @await Html.PartialAsync("_ScriptsPartial")
 
